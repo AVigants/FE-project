@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="assets/styles.css">
+    <title>FE project</title>
+</head>
+<body>
+    
+    <div class="login-form" id="loginFormWrapper">
+        <form class="card" id="loginForm">
+            <div class="avatar"> <img src="https://e-cdns-images.dzcdn.net/images/cover/93856da9461a89ab03f63396b612d6cf/500x500.jpg" alt=""></div>
+            <h2 class="text-center my-4">Log In</h2>       
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="Email" required="required">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" required="required">
+                <p>Invalid email or password</p>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block">Log in</button>
+            </div>
+            <div class="clearfix">
+                <label class="float-left form-check-label"><input type="checkbox"> Remember me</label>
+                <a href="#" class="float-right">Forgot Password?</a> <br> <hr>
+                <p class="text-center my-0">Don't have an account? <br><a href="#" id="registerHref">Create an Account!</a></p>
+            </div>        
+        </form>
+    </div>
+
+    <div class="login-form" id="registerFormWrapper">
+        <form class="card" id="registerForm">
+            <div class="avatar"> <img src="https://i.pinimg.com/originals/3d/52/5a/3d525a7c87f8a098a89587878fc28c14.jpg" alt=""></div>
+            <h2 class="text-center my-4">Register</h2>       
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="First Name" required="required" name="fname">
+                <p>Name can only contain English letters, must be between 2 and 25 characters long</p>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Last Name" required="required" name="lname">
+                <p>Name can only contain English letters, must be between 2 and 25 characters long</p>
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="Email" required="required" name="email">
+                <p>email must be a valid address, e.g. me@mydomain.com</p>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" required="required" name="pass">
+                <p>password bust be alphanumeric ('@','_' and '-' are allowed) and be 8-20 characters long</p>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Confirm Password" required="required" name="cpass">
+                <p>passwords must match</p>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </div>
+            <div class="clearfix">
+                <hr>
+                <p class="text-center my-0">Already have an account? <br><a href="#" id="loginHref">Sign in!</a></p>
+            </div> 
+        </form>
+    </div>
+
+    <script src="http://cdn.date-fns.org/v1.9.0/date_fns.min.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>

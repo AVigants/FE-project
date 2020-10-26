@@ -1,0 +1,104 @@
+/* @import url("https://fonts.googleapis.com/css?family=Tenor+Sans"); */
+
+html, body{
+    margin:0;
+    width: 100%;
+    background-color: #73a2ba;
+    font-family: "Poppins", sans-serif;
+}
+
+.login-form {
+    width: 340px;
+    margin: 80px auto;
+  	font-size: 15px;
+}
+.login-form form {
+    margin-bottom: 15px;
+    background: #f7f7f7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+.login-form h2 {
+    margin: 0 0 15px;
+}
+.form-control, .btn {
+    min-height: 38px;
+    border-radius: 2px;
+}
+.btn {        
+    font-size: 15px;
+    font-weight: bold;
+}
+.avatar {
+	position: absolute;
+	margin: 0 auto;
+	left: 0;
+	right: 0;
+	top: -50px;
+	width: 95px;
+	height: 95px;
+	border-radius: 50%;
+	z-index: 1;
+    background: #f7f7f7;
+	padding: 1px;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+}
+img{
+    width: 100%;
+    border-radius: 50%;
+}
+.valid:focus{
+    background: #7bed9f;
+}
+.invalid:focus{
+    background: #fd9644;
+}
+input + p {
+    font-family: arial;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: orange;
+    opacity: 0;
+    height: 0;
+}
+input.invalid + p{
+    opacity: 1;
+    height: auto;
+    margin-bottom: 20px;
+}
+input.valid + p{
+    opacity: 0;
+}
+#registerFormWrapper{
+    display:none;
+}
+
+
+
+
+.container{
+    max-width: 600px;
+  }
+  .btn{
+    /* background: #333; */
+    color: white;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  .btn:hover{
+      /* background:pink; */
+  }
+  .btn:focus{
+    outline: none !important;
+  }
+.username{
+  font-weight: bold;
+}
+.time{
+  font-size: 0.7em;
+  color: #999;
+}
+.update-mssg{
+  text-align: center;
+  margin: 20px auto;
+}
