@@ -6,6 +6,7 @@ $(function () {
     const loginPass = document.querySelector('#loginForm > div:nth-child(4) > input');
     const forgotPass = $('#loginForm > div.clearfix > a');
     const passResetEmailField = document.querySelector('#passResetEmail');
+
     //-------------------variable declaration to prevent crashes-----------------------------------------------
     const patterns = {
         fname: /^[a-zA-Z]{2,25}$/,
@@ -84,14 +85,16 @@ $(function () {
             return el.email === passResetEmailField.value
         });
         if(emailFind && emailFind.email === passResetEmailField.value){
-            $('#passResetEmailLabel').html(`<p>We've sent you a link to your inbox (not really)</p>`).css({'color': 'green'});
+            passResetEmailField.classList.remove('invalid');
+            $('#passResetEmailLabel').html(`<h5>We've sent you a link to your inbox (not really)</h5>`).css({'color': 'green'});
             $('#passResetBtn').hide();
             setTimeout(() => {
                 $('#passResetForm').fadeOut();
             }, 1500);
         }   else{
-            // $('#passResetEmailLabel').('Email not found')
+            passResetEmailField.classList.add('invalid');
         }
+        
     });
     //------------------------------------User class--------------------------------------------
     class User {
@@ -133,7 +136,6 @@ $(function () {
     //TODO bugfix: if you reverse fill out the form - cpass then pass then theres no cpass error that passwords dont match or it bypasses it
     //TODO add remember me feature
     //TODO emails cannot repeat when registering a new acc
-    //TODO add a form field that asks for your email for pass reseting
     //make an admin class that can delete users
     //TODO passwords cannot match
     //TODO display a black overlay screen with a 'thank you for registering, fname!' or smth like that (basically an ad). Add a close button and a timeout with 3 seconds that closes it automatically. Maybe add an animation of a countdown timer

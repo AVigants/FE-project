@@ -12,7 +12,14 @@
 </head>
 
 <body>
-
+    <div id="outerDiv">
+        <div id="middleDiv">
+            <div id="innerDiv">
+                <p>Thank You For Registering, <span id="fname">First Name</span>! You can now Log in!   </p>
+                <img src="https://www.flaticon.com/svg/static/icons/svg/25/25297.svg" id="thumbsup">
+            </div>
+        </div>
+    </div>
     <div class="login-form" id="loginFormWrapper">
         <form class="card" id="loginForm">
             <div class="avatar"> <img
@@ -37,6 +44,7 @@
             <div class="form-group" id="passResetFormGroup">
                 <label id="passResetEmailLabel">Submit your email to reset password!
                     <input type="email" class="form-control" placeholder="Email" id="passResetEmail">
+                    <p>Email not found...</p>
                 </label>
                 <button type="submit" class="btn btn-primary btn-block bg-warning" id="passResetBtn">Reset Password</button>
             </div>
