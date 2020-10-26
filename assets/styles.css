@@ -72,33 +72,17 @@ input.valid + p{
 #registerFormWrapper{
     display:none;
 }
-
-
-
-
-.container{
-    max-width: 600px;
-  }
-  .btn{
-    /* background: #333; */
-    color: white;
-    outline: none !important;
-    box-shadow: none !important;
-  }
-  .btn:hover{
-      /* background:pink; */
-  }
-  .btn:focus{
-    outline: none !important;
-  }
-.username{
-  font-weight: bold;
+#passResetEmailField{
+    margin:10px;
 }
-.time{
-  font-size: 0.7em;
-  color: #999;
+#passResetEmail{
+    margin: 10px 0;
 }
-.update-mssg{
-  text-align: center;
-  margin: 20px auto;
+#passReset{
+    margin: 40px auto -20px;
+}
+#passResetForm{
+    text-align: center;
+    display: none;
+    margin:40px 0 -10px;
 }
