@@ -6,6 +6,7 @@ $(function () {
     const loginPass = document.querySelector('#loginForm > div:nth-child(4) > input');
     const forgotPass = $('#loginForm > div.clearfix > a');
     const passResetEmailField = document.querySelector('#passResetEmail');
+    const registeredUserSpan = document.getElementById('registeredUserSpan');
 
     //-------------------variable declaration to prevent crashes-----------------------------------------------
     const patterns = {
@@ -90,7 +91,7 @@ $(function () {
             $('#passResetBtn').hide();
             setTimeout(() => {
                 $('#passResetForm').fadeOut();
-            }, 1500);
+            }, 2500);
         }   else{
             passResetEmailField.classList.add('invalid');
         }
@@ -123,7 +124,26 @@ $(function () {
             userArr = JSON.stringify(userArr);
             localStorage.setItem('userArr', userArr);
             userArr = JSON.parse(userArr);
-            alert('All set! You can now Log in!');
+            $('#innerDiv span').text(userObj.fname)
+            user.renderThankYou(userObj);
+        }
+        renderThankYou(userObj){
+            $('#outerDiv').fadeIn();
+            $('#close').click(e=>{
+                $('#outerDiv').fadeOut(100);
+            });
+            //rainbow colored text
+            $('innerDiv span').text(userObj.fname);
+            for(let i = 0; i<360; i++){
+                setTimeout(() => {
+                    registeredUserSpan.style.color = `hsl(${i}, 100%, 50%)`;
+                }, i*10);
+            };
+            setTimeout(() => {
+                $('#outerDiv').fadeOut(100);
+            }, 3600);
+
+            //go back to login form
             $('#registerFormWrapper').fadeOut(200);
             setTimeout(() => {
                 $('#loginFormWrapper').fadeIn(200);
