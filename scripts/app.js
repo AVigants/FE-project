@@ -16,7 +16,11 @@ $(function () {
         pass: /^[\w@-]{8,20}$/,
         cpass: /^[\w@-]{8,20}$/,
     };
-    let rememberMe = false;
+    let rememberMe = {
+        isRememberMeChecked : false,
+        email: '',
+        pass: '',
+    };
     let userArr = [];
     let userEmails = [];
     let userObj = {
@@ -35,10 +39,14 @@ $(function () {
         });
     };
     if(localStorage.getItem('rememberMe')) {
-        rememberMe = true;
+        rememberMe = JSON.parse(localStorage.getItem('rememberMe'));
+        //set fname and pass field to stored values 
         $('#rememberMe').attr('checked', true);
-    }
+        $('#loginEmail').val(rememberMe.email);
+        $('#loginPass').val(rememberMe.pass);
 
+    }
+    
     //--------------------------------show and hide login.register forms with Jquery -----------------------
     $('#registerHref').click(e => {
         $('#loginFormWrapper').fadeOut(200);
@@ -76,9 +84,12 @@ $(function () {
         if (emailFind && emailFind.pass === loginPass.value) {
             document.querySelector('#loginForm > div:nth-child(4) > input').classList.remove('invalid');
             
-            if(rememberMe === true){
+            if(rememberMe.isRememberMeChecked === true){
+                rememberMe.email = emailFind.email;
+                rememberMe.pass = emailFind.pass;
+                rememberMe = JSON.stringify(rememberMe);
                 localStorage.setItem('rememberMe', rememberMe);
-            }   else if(localStorage.getItem('rememberMe')){
+            }   else if(rememberMe.isRememberMeChecked === false && localStorage.getItem('rememberMe')){
                 localStorage.removeItem('rememberMe');
                 console.log('rememberMe removed from local storage');
             }
@@ -111,7 +122,7 @@ $(function () {
     });
     //---------------------------------remember me feature----------------------------------
         $('#rememberMe').click(e=>{
-            rememberMe = !rememberMe;
+            rememberMe.isRememberMeChecked = !rememberMe.isRememberMeChecked;
         });
         //------------------------------------User class--------------------------------------------
         class User {
