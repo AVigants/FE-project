@@ -93,7 +93,7 @@ $(function () {
                 localStorage.removeItem('rememberMe');
                 console.log('rememberMe removed from local storage');
             }
-            alert('successful login!!!!');
+            console.log('successful login!!!!');
             window.location.href = 'main.html'
         } else {
             document.querySelector('#loginForm > div:nth-child(4) > input').classList.add('invalid');
@@ -120,7 +120,7 @@ $(function () {
         }
 
     });
-    //---------------------------------remember me feature----------------------------------
+    //---------------------------------remember me checkbox----------------------------------
         $('#rememberMe').click(e=>{
             rememberMe.isRememberMeChecked = !rememberMe.isRememberMeChecked;
         });
@@ -138,6 +138,12 @@ $(function () {
                     field.classList.add('valid')
                     field.classList.remove('invalid');
                     userObj[field.name] = dataValue;
+                    //email check
+                    if(field.name === 'email' && user.checkIfEmailAlreadyExists(dataValue)){
+                        console.log('email already exists');
+                        field.classList.add('invalid');
+                        field.classList.remove('valid');
+                    }
 
                 } else {
                     field.classList.add('invalid');
@@ -153,6 +159,10 @@ $(function () {
                 userArr = JSON.parse(userArr);
                 $('#innerDiv span').text(userObj.fname)
                 user.renderThankYou(userObj);
+            }
+            checkIfEmailAlreadyExists(data){
+                let emailMatch = userArr.find(el => el.email === data);
+                return emailMatch;
             }
             renderThankYou(userObj) {
                 $('#outerDiv').fadeIn();
@@ -179,11 +189,9 @@ $(function () {
         }
         let user = new User('firstName', 'lastName', 'email@email.com', 'password', 'password');
         //---------------------------------laundry list-------------------------------------------------
-        //TODO bugfix: if you reverse fill out the form - cpass then pass then theres no cpass error that passwords dont match or it bypasses it
-        //TODO add remember me feature
-        //TODO emails cannot repeat when registering a new acc
+        //TODO + bugfix: passwords cannot match && if you reverse fill out the form - cpass then pass then theres no cpass error that passwords dont match or it bypasses it
         //make an admin class that can delete users
-        //TODO passwords cannot match
         //comments:
         //Im sure I dont have to use true/else for checkboxes since I can probably check for their state when loggin in. For some reaosn I couldnt do it with jquery but ironically I can set the default value to checked if there exists a value in local storage already...
+        //make a doesEmailExist function
     })
