@@ -91,7 +91,10 @@ $(function () {
                 localStorage.removeItem('rememberMe');
                 console.log('rememberMe removed from local storage');
             }
-            console.log('successful login!!!!');
+            console.log('successful login!');
+            //setting this user in local storage to be used in main js and main html later
+            emailFind = JSON.stringify(emailFind);
+            localStorage.setItem('emailFind', emailFind);
             window.location.href = 'main.html'
         } else {
             document.querySelector('#loginForm > div:nth-child(4) > input').classList.add('invalid');
@@ -194,6 +197,5 @@ $(function () {
     //---------------------------------laundry list-------------------------------------------------
     //make an admin class that can delete users
     //comments:
-    //Im sure I dont have to use true/else for checkboxes since I can probably check for their state when loggin in. For some reaosn I couldnt do it with jquery but ironically I can set the default value to checked if there exists a value in local storage already...
-    //make a doesEmailExist function
-})
+    //Im sure I dont have to use true/else for checkboxes since I can probably check for their state when loggin in. For some reason I couldnt do it with jquery but ironically I can set the default value to checked if there exists a value in local storage already...
+});
