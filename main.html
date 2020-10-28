@@ -19,11 +19,14 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-dark py-3">
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar navbar-expand-lg bg-dark py-3 sticky-top">
 
         <div class="navbar-nav mx-auto">
             <li class="mx-5">
-                <a href="" class="text-warning">
+                <a href="" class="text-warning" id="becomeAdminBtn">
                     <i class="fas fa-crown fa-lg text-warning"></i>
                     Become an Admin
                 </a>
@@ -34,18 +37,19 @@
                     Settings
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#"><i class="fas fa-th-list"></i> List View</a>
-                    <a class="dropdown-item" href="#"><i class="fas fa-th"></i> Grid View</a>
+                    <a class="dropdown-item" href="#" id="listViewBtn"><i class="fas fa-th-list"></i> List View</a>
+                    <a class="dropdown-item" href="#" id="gridViewBtn"><i class="fas fa-th"></i> Grid View</a>
+                    <a class="dropdown-item" href="#" id="clearArrayBtn"><i class="fas fa-trash-alt"></i> Clear Local Storage</a>
                 </div>
             </li>
             <li class="mx-5">
-                <a href="" class="text-white">
+                <a href="" class="text-white" id="aboutBtn">
                     <i class="fas fa-info-circle text-white fa-lg"></i>
                     About
                 </a>
             </li>
             <li class="mx-5">
-                <a href="index.html" class="text-white">
+                <a href="index.html" class="text-white" id="logoutBtn">
                     <i class="fas fa-sign-out-alt text-white fa-lg"></i>
                     Log Out
                 </a>
@@ -54,12 +58,21 @@
         </div>
     </nav>
 
+    <!-- JUMBOTRON -->
 
     <div class="jumbotron jumbotron-fluid text-white text-center" style="background: #73a2ba;">
         <!-- jumbotron-fluid gets rid of the corner rounding thats assignes to it by default -->
         <div class="container">
-            <h1 class="display-1">Welcome back, <span>name</span></h1>
-            <p class="lead">May the force be ever in your favor</p>
+            <h1 class="display-1">Welcome back, <span class="text-lowercase text-capitalize">name</span></h1>
+            <p class="lead">"May the force be ever in your favor"</p>
+            <p class="font-italic">/Dumbledore/</p>
+        </div>
+    </div>
+
+    <!-- CARDS -->
+
+    <div class="container text-muted">
+        <div class="row">
         </div>
     </div>
 
