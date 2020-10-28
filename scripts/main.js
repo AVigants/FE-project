@@ -2,16 +2,7 @@ $(window).on("load", function () {
     //---------------declaring variables to prevent crashes------------------
     let emailFind = {};
     let userArr = [];
-    // let fakeJsonData = [];
     let view = 'grid';
-    // const makeProperName = (str) => {
-    //     if (typeof str !== 'string') {
-    //         return '';
-    //     } else {
-    //         str = str.toLowerCase();
-    //         return str.charAt(0).toUpperCase() + str.slice(1)
-    //     }
-    // }
     //--------------------------generate img src string function for template string when renedring-------------------------------------------
     let generateImg = () => {
         // return 'https://thispersondoesnotexist.com/image'
@@ -42,16 +33,15 @@ $(window).on("load", function () {
     userArr.splice(indexOfEmailFind, 1);
     //--------------------checking length of userArr and adding fake data if needed------------------
     if (userArr.length < 16) {
-        // let j = 16 - userArr.length;
         getFakeData()
             .then(fakeData => {
                 fakeData.forEach(el => [
                     userArr.push(el)
-                ])
-                renderGrid(userArr);
+                ]);
+                renderData(userArr);
             })
     } else {
-        renderGrid(userArr);
+        renderData(userArr);
     }
     //-----------------------my welcome animation that Im probably going to abandon--------
 
@@ -64,10 +54,12 @@ $(window).on("load", function () {
         console.log("you're about to become an admin. Proceed?")
     });
     $('#listViewBtn').click(e => {
-        renderList();
+        view == 'list'
+        renderData(userArr);
     });
     $('#gridViewBtn').click(e => {
-        renderGrid();
+        view = 'grid'
+        renderData(userArr);
     });
     $('#clearArrayBtn').click(e => {
         localStorage.removeItem('userArr');
@@ -82,31 +74,50 @@ $(window).on("load", function () {
     //---------------------updating the dom with values from LS------------------------
     $('.jumbotron span').text(emailFind.fname);
 
-    function renderGrid(data) {
-        if (view == 'list') {
-            view = 'grid';
-        }
-        //if more than 16 items in userArray then only render the first 16---------
-        if (data.length > 16) {
-            for (let i = 0; i < 16; i++) {
-                $('.row').append(`
-                <div class="col-md-6 col-lg-3 my-2 lmaoCards" id="${data[i].email}">
-                    <div class="card text-center">
-                        <img src="${generateImg()}" class="card-img-top img-fluid">
-                        <div class="card-block">
-                            <h3 class="card-title">${data[i].fname}</h3>
-                            <p>${data[i].email}</p>
+    function renderData(data) {
+        if (view == 'grid') {
+            if (data.length > 16) {
+                for (let i = 0; i < 16; i++) {
+                    $('#cards').append(`
+                    <div class="col-md-6 col-lg-3 my-2 lmaoCards" id="${data[i].email}">
+                        <div class="card text-center">
+                            <img src="${generateImg()}" class="card-img-top img-fluid">
+                            <div class="card-block">
+                                <h3 class="card-title">${data[i].fname}</h3>
+                                <p>${data[i].email}</p>
+                            </div>
                         </div>
-                    </div>
-                </div>`);
+                    </div>`);
+                }
+            }
+        } else if (view == 'list') {
+            if (data.length > 16) {
+                $('#table').append(`
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">`);
+                for (let i = 0; i < 16; i++) {
+                    $('#tbody').append(`
+                    <tr id="${data[i].email}">
+                    <th scope="row">${i + 1}</th>
+                    <td>${data[i].fname}</td>
+                    <td>${data[i].email}</td>
+                    <td>edit, del</td>
+                  </tr>
+                    `);
+                }
+
             }
         }
     }
-    function renderList(data) {
-        if (view == 'grid') {
-            view = 'list';
-        }
-    }
+
+    //new idea = one function called render and inside it an if check (if view = grid then .... or if view = list then .... )
 
 
 
