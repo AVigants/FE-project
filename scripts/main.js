@@ -2,37 +2,36 @@ $(window).on("load", function () {
     //---------------declaring variables to prevent crashes------------------
     let emailFind = {};
     let userArr = [];
-    let fakeJsonData = [];
+    // let fakeJsonData = [];
     let view = 'grid';
-    const makeProperName = (str) => {
-        if (typeof str !== 'string') {
-            return '';
-        } else {
-            str = str.toLowerCase();
-            return str.charAt(0).toUpperCase() + str.slice(1)
-        }
-    }
+    // const makeProperName = (str) => {
+    //     if (typeof str !== 'string') {
+    //         return '';
+    //     } else {
+    //         str = str.toLowerCase();
+    //         return str.charAt(0).toUpperCase() + str.slice(1)
+    //     }
+    // }
     //--------------------------generate img src string function for template string when renedring-------------------------------------------
     let generateImg = () => {
         // return 'https://thispersondoesnotexist.com/image'
         let base = 'https://picsum.photos/200/?random=';
-        let randomNum = Math.random().toString().slice(2,4);
-        return base+randomNum;
+        let randomNum = Math.random().toString().slice(2, 4);
+        return base + randomNum;
     }
     //--------------------------fetching 20 fake json users and storing them in a var-------------------------
-    const getFakeData = async() => {
+    const getFakeData = async () => {
         let fakeData = [];
-        for(let i =0; i<2; i++){
+        for (let i = 0; i < 2; i++) {
             const response = await fetch('https://jsonplaceholder.typicode.com/users');
             const data = await response.json();
             data.forEach(el => {
 
-                fakeData.push({fname: el.name, email: el.email});
+                fakeData.push({ fname: el.name, email: el.email });
             });
         }
         return fakeData;
     }
-    // getFakeData().then(data =>console.log(data))
     //----------------------checking localStorage for any userArr, emailFind data-----------
     if (localStorage.getItem('emailFind') || localStorage.getItem('userArr')) {
         emailFind = JSON.parse(localStorage.getItem('emailFind'));
@@ -42,16 +41,18 @@ $(window).on("load", function () {
     let indexOfEmailFind = userArr.findIndex(el => el.email === emailFind.email);
     userArr.splice(indexOfEmailFind, 1);
     //--------------------checking length of userArr and adding fake data if needed------------------
-    if(userArr.length <16){
-        let j = 16-userArr.length;
+    if (userArr.length < 16) {
+        // let j = 16 - userArr.length;
         getFakeData()
-        .then(fakeData => {
-                for(let i = 0; i<j; i++){
-                    userArr.push(fakeData[i]);
-                };
-                render(userArr);
-        })
-    };
+            .then(fakeData => {
+                fakeData.forEach(el => [
+                    userArr.push(el)
+                ])
+                renderGrid(userArr);
+            })
+    } else {
+        renderGrid(userArr);
+    }
     //-----------------------my welcome animation that Im probably going to abandon--------
 
 
@@ -69,8 +70,7 @@ $(window).on("load", function () {
         renderGrid();
     });
     $('#clearArrayBtn').click(e => {
-        console.log('youre about to clear all the registered users from local storage. Proceed?')
-        // localStorage.removeItem('userArr');
+        localStorage.removeItem('userArr');
     });
     $('#aboutBtn').click(e => {
         e.preventDefault();
@@ -82,33 +82,31 @@ $(window).on("load", function () {
     //---------------------updating the dom with values from LS------------------------
     $('.jumbotron span').text(emailFind.fname);
 
-        //render the first 16 items
-        let renderGrid = () => {
-            if(view == 'list'){
-                view = 'grid';
-            }
+    function renderGrid(data) {
+        if (view == 'list') {
+            view = 'grid';
         }
-        let renderList = () => {
-            if(view == 'grid'){
-                view = 'list';
-            }
-        }
-
-        let render = (userArr) => {
-            userArr.forEach(el => {
+        //if more than 16 items in userArray then only render the first 16---------
+        if (data.length > 16) {
+            for (let i = 0; i < 16; i++) {
                 $('.row').append(`
-                <div class="col-md-6 col-lg-3 my-2 lmaoCards" id="${el.email}">
+                <div class="col-md-6 col-lg-3 my-2 lmaoCards" id="${data[i].email}">
                     <div class="card text-center">
                         <img src="${generateImg()}" class="card-img-top img-fluid">
                         <div class="card-block">
-                            <h3 class="card-title">${el.fname} ${el.lname}</h3>
-                            <p>${el.email}</p>
+                            <h3 class="card-title">${data[i].fname}</h3>
+                            <p>${data[i].email}</p>
                         </div>
                     </div>
                 </div>`);
-            });
+            }
         }
-
+    }
+    function renderList(data) {
+        if (view == 'grid') {
+            view = 'list';
+        }
+    }
 
 
 
@@ -142,6 +140,7 @@ $(window).on("load", function () {
     //TODO when loggin out - remove emailFind from local storage
     //add a clearAll to settings dropdown to remove all data from localstorage
     // in index html add a class to the thanks you ad : tetxt-lowercase and text-capitalize for the name
+    //the template string only prints out the first name of my created users and the full name of the fake data.
 
     //-------------comments----------------------------
     //I probably didnt need to make a seperate object for 'remember me', I could have recycled 'emailFind' and called it a day
@@ -154,4 +153,5 @@ $(window).on("load", function () {
     // };
     // console.log(randomArray);
     //yes I could make it so the next 16 items get rendered when I press a 'next page' btn but thats too much work for some random school assignment cmon now
+
 });

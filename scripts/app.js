@@ -172,6 +172,12 @@ $(function () {
         }
         renderThankYou(userObj) {
             $('#outerDiv').fadeIn();
+            $(document).keyup(function(e) {
+                if (e.key === "Escape") {
+                    $('#outerDiv').fadeOut(100);
+               }
+           });
+           
             $('#close').click(e => {
                 $('#outerDiv').fadeOut(100);
             });
