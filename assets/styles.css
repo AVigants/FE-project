@@ -22,7 +22,7 @@ html, body{
     height: 50%;
     position: relative;
     transform:translate(50%, 50%);
-    background-color:bisque;
+    background-color:#dfe6e9;
     text-align: center;
     border-radius: 5px;
 }

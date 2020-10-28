@@ -12,33 +12,46 @@ $(window).on("load", function () {
             return str.charAt(0).toUpperCase() + str.slice(1)
         }
     }
-    let generateFace = () => {
-        return 'https://thispersondoesnotexist.com/image'
+    //--------------------------generate img src string function for template string when renedring-------------------------------------------
+    let generateImg = () => {
+        // return 'https://thispersondoesnotexist.com/image'
+        let base = 'https://picsum.photos/200/?random=';
+        let randomNum = Math.random().toString().slice(2,4);
+        return base+randomNum;
     }
     //--------------------------fetching 20 fake json users and storing them in a var-------------------------
-    let makeFakeJsonDataArray = (data) => {
-        data.forEach(el=>{
-            fakeJsonData.push(el);
-        });
-    };
-    for(let i = 0; i<2; i++){
-        fetch('https://jsonplaceholder.typicode.com/users')
-        .then(response => response.json())
-        .then(data=>makeFakeJsonDataArray(data));
-    };
-    //----------------------checking localStorage for any data saved from app.js-----------
+    const getFakeData = async() => {
+        let fakeData = [];
+        for(let i =0; i<2; i++){
+            const response = await fetch('https://jsonplaceholder.typicode.com/users');
+            const data = await response.json();
+            data.forEach(el => {
+
+                fakeData.push({fname: el.name, email: el.email});
+            });
+        }
+        return fakeData;
+    }
+    // getFakeData().then(data =>console.log(data))
+    //----------------------checking localStorage for any userArr, emailFind data-----------
     if (localStorage.getItem('emailFind') || localStorage.getItem('userArr')) {
         emailFind = JSON.parse(localStorage.getItem('emailFind'));
         userArr = JSON.parse(localStorage.getItem('userArr'));
     };
+    //----------------------removing the current, logged in user temporarily from the userArray------------------------------
+    let indexOfEmailFind = userArr.findIndex(el => el.email === emailFind.email);
+    userArr.splice(indexOfEmailFind, 1);
     //--------------------checking length of userArr and adding fake data if needed------------------
     if(userArr.length <16){
         let j = 16-userArr.length;
-        for(let i = 0; i<j; i++){
-            userArr.push(fakeJsonData[i]);
-        }
-    }
-
+        getFakeData()
+        .then(fakeData => {
+                for(let i = 0; i<j; i++){
+                    userArr.push(fakeData[i]);
+                };
+                render(userArr);
+        })
+    };
     //-----------------------my welcome animation that Im probably going to abandon--------
 
 
@@ -69,36 +82,32 @@ $(window).on("load", function () {
     //---------------------updating the dom with values from LS------------------------
     $('.jumbotron span').text(emailFind.fname);
 
-   
-
-    
-
-
-
-    //render the first 16 items
-    let renderGrid = () => {
-        if(view == 'list'){
-            view = 'grid';
+        //render the first 16 items
+        let renderGrid = () => {
+            if(view == 'list'){
+                view = 'grid';
+            }
         }
-    }
-    let renderList = () => {
-        if(view == 'grid'){
-            view = 'list';
+        let renderList = () => {
+            if(view == 'grid'){
+                view = 'list';
+            }
         }
-    }
 
-    // userArr.forEach(el => {
-    //     $('.row').append(`
-    //     <div class="col-md-6 col-lg-3 my-2 lmaoCards" id="${el.email}">
-    //         <div class="card text-center">
-    //             <img src="${generateFace()}" class="card-img-top img-fluid">
-    //             <div class="card-block">
-    //                 <h3 class="card-title">${el.fname} ${el.lname}</h3>
-    //                 <p>${el.email}</p>
-    //             </div>
-    //         </div>
-    //     </div>`);
-    // });
+        let render = (userArr) => {
+            userArr.forEach(el => {
+                $('.row').append(`
+                <div class="col-md-6 col-lg-3 my-2 lmaoCards" id="${el.email}">
+                    <div class="card text-center">
+                        <img src="${generateImg()}" class="card-img-top img-fluid">
+                        <div class="card-block">
+                            <h3 class="card-title">${el.fname} ${el.lname}</h3>
+                            <p>${el.email}</p>
+                        </div>
+                    </div>
+                </div>`);
+            });
+        }
 
 
 
