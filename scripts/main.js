@@ -3,16 +3,53 @@ $(window).on("load", function () {
     let emailFind = {};
     let userArr = [];
     $('#table').hide();
-    let isAdmin = false;
+    // let isAdmin = false;
 
-    //--------------------------generate img src string function for template string when renedring-------------------------------------------
+    //--------------------------generate img src string function for template string when renedring------------------
     let generateImg = () => {
         // return 'https://thispersondoesnotexist.com/image'
         let base = 'https://picsum.photos/400/?random=';
         let randomNum = Math.random().toString().slice(2, 4);
         return base + randomNum;
     }
-    //--------------------------fetching 20 fake json users and storing them in a var-------------------------
+    //----------------------checking localStorage for any userArr, emailFind data-----------
+    if (localStorage.getItem('emailFind') || localStorage.getItem('userArr')) {
+        emailFind = JSON.parse(localStorage.getItem('emailFind'));
+        userArr = JSON.parse(localStorage.getItem('userArr'));
+    };
+    //----------------------removing the current, logged in user temporarily from the userArray-------------
+    let indexOfEmailFind = userArr.findIndex(el => el.email === emailFind.email);
+    userArr.splice(indexOfEmailFind, 1);
+    //-------------------------------User and Admin  classes-----------------------------------
+    class User {
+        constructor(fname, lname, email, pass, cpass) {
+            this.fname = fname,
+                this.lname = lname,
+                this.email = email,
+                this.pass = pass,
+                this.cpass = cpass
+        }
+        print(){
+            console.log('lmao')
+        }
+    }
+    let user = new User (emailFind.fname, emailFind.lname, emailFind.email, emailFind.pass, emailFind.cpass);
+
+    class Admin extends User{
+        constructor(fname, lname, email, pass, cpass, isAdmin){
+            super(fname, lname, email, pass, cpass);
+            this.isAdmin = isAdmin;
+        }
+        deleteUser(user){
+            users = users.filter(u => u.username !== user.username);
+        }
+        editUser(user){
+            console.log(user);
+        }
+    }
+    let admin = new Admin('fname', 'lname', 'email', 'pass', 'cpass', false);
+
+    //--------------------------function: fetching 20 fake json users and storing them in [fakeData]-------------------------
     const getFakeData = async () => {
         let fakeData = [];
         for (let i = 0; i < 2; i++) {
@@ -25,14 +62,6 @@ $(window).on("load", function () {
         }
         return fakeData;
     }
-    //----------------------checking localStorage for any userArr, emailFind data-----------
-    if (localStorage.getItem('emailFind') || localStorage.getItem('userArr')) {
-        emailFind = JSON.parse(localStorage.getItem('emailFind'));
-        userArr = JSON.parse(localStorage.getItem('userArr'));
-    };
-    //----------------------removing the current, logged in user temporarily from the userArray------------------------------
-    let indexOfEmailFind = userArr.findIndex(el => el.email === emailFind.email);
-    userArr.splice(indexOfEmailFind, 1);
     //--------------------checking length of userArr and adding fake data if needed------------------
     if (userArr.length < 16) {
         getFakeData()
@@ -86,7 +115,7 @@ $(window).on("load", function () {
     });
 
     //---------------------updating the dom with values from LS------------------------
-    $('.jumbotron span').text(emailFind.fname);
+    $('.jumbotron span').text(user.fname);
 
     function renderData(data) {
         if (data.length > 16) {
@@ -135,37 +164,12 @@ $(window).on("load", function () {
             }
         })   
     }
-    //-------------------------------User and Admin  classes-----------------------------------
-    class User {
-        constructor(fname, lname, email, pass, cpass) {
-            this.fname = fname,
-                this.lname = lname,
-                this.email = email,
-                this.pass = pass,
-                this.cpass = cpass
-        }
-    }
-    let user = new User ('fname', 'lname', 'email', 'pass', 'cpass');
-
-    class Admin extends User{
-        constructor(fname, lname, email, pass, cpass, isAdmin){
-            super(fname, lname, email, pass, cpass);
-            this.isAdmin = isAdmin;
-        }
-        deleteUser(user){
-            users = users.filter(u => u.username !== user.username);
-        }
-        editUser(user){
-            console.log(user);
-        }
-    }
-    let admin = new Admin('fname', 'lname', 'email', 'pass', 'cpass', false)
-    console.log(admin)
+    
 
 });
 //fix the button thingy - when I dont hover over, become addy and then hover over = regular pointer. otherwise = alwasy not-allowed
 //fix the render condition -         if (data.length > 16) { ---- I dont like this statement. Could crash later
-
+//I dont like that I fetch data here - I could fetch the data in the login page - check length and then fetch data, then save it so I dont have to fetch it here...
 
 //save the admin status
 //add buttons to grid
