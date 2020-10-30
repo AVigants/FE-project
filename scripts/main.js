@@ -17,16 +17,7 @@ $(window).on("load", function () {
     if (localStorage.getItem('thisUser') || localStorage.getItem('userArr')) {
         thisUser = JSON.parse(localStorage.getItem('thisUser'));
         userArr = JSON.parse(localStorage.getItem('userArr'));
-
-            //removing temporarily thisUser from userArr so we can render the data without it -------------
-            let indexOfthisUser = userArr.findIndex(el => el.email === thisUser.email);
-            userArr.splice(indexOfthisUser, 1);
-            //render data-------------
-            renderData(userArr);
-            //adding back thisUser to the array----------------------------------
-            userArr.push(thisUser);
-            localStorage.setItem('userArr', JSON.stringify(userArr))
-
+        renderData(userArr);
     };
 
     //-----------------------my welcome animation that Im probably going to abandon--------
@@ -38,7 +29,7 @@ $(window).on("load", function () {
         e.preventDefault();
         if (!thisUser.isAdmin) {
             thisUser.isAdmin = true;
-            renderData(userArr);
+            renderAdmin();
 
             localStorage.setItem('thisUser', JSON.stringify(thisUser));
         }
@@ -53,7 +44,8 @@ $(window).on("load", function () {
     });
     $('#clearArrayBtn').click(e => {
         localStorage.removeItem('userArr');
-        //make it so it clears the render field TODO
+        $('#table').hide();
+        $('#cards').hide();
     });
     $('#aboutBtn').click(e => {
         e.preventDefault();
@@ -61,21 +53,24 @@ $(window).on("load", function () {
     });
     $('#logoutBtn').click(e => {
         //check if we clicked the clear LS button. If we havent, then the LS wont be empty, which means we should add back in thisUser to the array
-        if(localStorage.getItem('userArr')){
+        if (localStorage.getItem('userArr')) {
             userArr.push(thisUser);
             localStorage.setItem('userArr', JSON.stringify(userArr));
+        }   else if(!localStorage.getItem('userArr') && localStorage.getItem('rememberMe')){
+            localStorage.removeItem('rememberMe');
         }
         localStorage.removeItem('thisUser');
+        window.location.href = 'index.html'
     });
-    function adminMode(){
-        if(thisUser.isAdmin){
-            $('.editBtn').click(e=> {
+    function adminMode() {
+        if (thisUser.isAdmin) {
+            $('.editBtn').click(e => {
                 $("#editForm").toggle();
-                scrollTo(0,0);
-                id = Number(e.target.name.slice(2,4));
+                scrollTo(0, 0);
+                id = Number(e.target.name.slice(2, 4));
                 $('#editField').val(userArr[id].fname);
             });
-            $('#editForm').submit(e=> {
+            $('#editForm').submit(e => {
                 e.preventDefault();
                 userArr[id].fname = $('#editField').val();
                 $(`#ID${id} > td`)[0].textContent = userArr[id].fname;
@@ -85,14 +80,13 @@ $(window).on("load", function () {
 
                 $('#editForm').hide();
             });
-            $('.delBtn').click(e=> {
-                id = Number(e.target.name.slice(2,4));
+            $('.delBtn').click(e => {
+                id = Number(e.target.name.slice(2, 4));
                 userArr.splice(id, 1);
 
                 $(`#ID${id}`).hide();
                 $(`.lmaoCards[name='ID${id}']`).hide();
                 localStorage.setItem('userArr', JSON.stringify(userArr));
-
             });
         }
     }
@@ -101,8 +95,22 @@ $(window).on("load", function () {
     //jumbotron span name greeting-------------
     $('.jumbotron span').text(thisUser.fname);
 
-    //render table(list) and cards(grid)--------------------
+    //check length of userArr and if its  >16, only render 16 items. Else render everything
     function renderData(data) {
+        if (data.length >= 16) {
+            let adjustedUserArr = [];
+            for (let i = 0; i < 16; i++) {
+                adjustedUserArr.push(data[i])
+            };
+            renderAll(adjustedUserArr);
+            renderAdmin();
+        } else {
+            renderAll(data);
+            renderAdmin();
+        }
+    }
+
+    function renderAll(data) {
         //#table head render------------------------------
         $('#table').append(`
             <thead>
@@ -115,13 +123,13 @@ $(window).on("load", function () {
             </thead>
             <tbody id="tbody">
         `);
-        for (let i = 0; i < 16; i++) {
+        data.forEach((el, i) => {
             //append data to #table and render----------------
             $('#tbody').append(`
                 <tr id="ID${i}">
                     <th scope="row">${i + 1}</th>
-                    <td>${data[i].fname}</td>
-                    <td>${data[i].email}</td>
+                    <td>${el.fname}</td>
+                    <td>${el.email}</td>
                     <td>
                         <button type="button" class="btn btn-light fas fa-edit fa-lg editBtn" name="ID${i}"></button>
                         <button type="button" class="btn btn-light fas fa-trash fa-lg delBtn" name="ID${i}"></button>
@@ -135,16 +143,17 @@ $(window).on("load", function () {
                 <div class="card text-center">
                     <img src="${generateImg()}" class="card-img-top img-fluid">
                     <div class="card-block">
-                        <h3 class="card-title">${data[i].fname}</h3>
-                        <p>${data[i].email}</p>
+                        <h3 class="card-title">${el.fname}</h3>
+                        <p>${el.email}</p>
                             <button type="button" class="btn btn-light float-left fas fa-edit fa-lg m-1 editBtn" name="ID${i}"></button>
                             <button type="button" class="btn btn-light float-right fas fa-trash fa-lg m-1 delBtn" name="ID${i}"></button>
                     </div>
                 </div>
             </div>`);
-        }
-
-        // admin features-----------------------------------------
+        });
+    }
+    // admin features-----------------------------------------
+    function renderAdmin(){
         if (thisUser.isAdmin) {
             $('.jumbotron').css({ 'background': 'gold' });
             $('.editBtn').removeClass('btn-light').addClass('btn-primary');
@@ -154,7 +163,7 @@ $(window).on("load", function () {
             $('.editBtn').css('cursor', 'pointer');
             $('.delBtn').css('cursor', 'pointer');
             adminMode();
-        }   else {
+        } else {
             $('.editBtn').css('cursor', 'not-allowed');
             $('.delBtn').css('cursor', 'not-allowed');
         }
@@ -162,8 +171,4 @@ $(window).on("load", function () {
     //end of big render func---------------------------------
 });
 
-//clear LS = clean the render table
-//the 16 per page render issue
-//numbers in list are fucky when you delete a user
 //animation?
-

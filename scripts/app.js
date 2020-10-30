@@ -104,19 +104,27 @@ $(function () {
                 localStorage.removeItem('rememberMe');
                 console.log('rememberMe removed from local storage');
             }
-            if (userArr.length < 16) {
-                console.log('userArr.length < 16 so fetching fakeData');
+            if (userArr.length < 10) {
+                console.log('userArr.length < 10 so fetching fakeData');
                 getFakeData()
                     .then(fakeData => {
                         fakeData.forEach(el => {
                             userArr.push(el)
                         });
+                        //remove thisUser from userArr 
+                        let indexOfthisUser = userArr.findIndex(el => el.email === emailFind.email);
+                        userArr.splice(indexOfthisUser, 1);
                         //storing all this data is LS
                         localStorage.setItem('userArr', JSON.stringify(userArr));
                         localStorage.setItem('thisUser', JSON.stringify(emailFind));
                         window.location.href = 'main.html';
                     });
             }   else{
+                //remove thisUser from userArr 
+                let indexOfthisUser = userArr.findIndex(el => el.email === emailFind.email);
+                userArr.splice(indexOfthisUser, 1);
+                //storing all this data is LS
+                localStorage.setItem('userArr', JSON.stringify(userArr))
                 localStorage.setItem('thisUser', JSON.stringify(emailFind));
                 window.location.href = 'main.html';
             }
@@ -227,6 +235,3 @@ class User {
 }
 let user = new User('firstName', 'lastName', 'email@email.com', 'password', 'password');
 });
-
-
-//remove rememberMe when it is ticked off, not when logging in
