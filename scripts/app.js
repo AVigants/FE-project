@@ -235,3 +235,23 @@ class User {
 }
 let user = new User('firstName', 'lastName', 'email@email.com', 'password', 'password');
 });
+
+//-------------------------COMMENTS-------------------------------------
+
+// I started using classes in this file, but I dont neccessarily need it. In the main I wrote code without using classes
+
+// rememberMe actually could be tied to the thisUser object similar to isAdmin. It doesnt need to be a seperate L.S. key-value pair.
+
+// jquery fade() isnt recognized as a function in main.js because of Bootsrap... all because I wanted to use Bootstraps dropbox in the navbar, but without their jquery I cant use fadein/fadeout. The loaded scripts are different in the html headers in both files.
+
+//from a cyber safety POV this would never work simply because anyone can type 'main' in the address bar and access the content. This is just a front end project.
+
+//I think if I made more seperate functions, I could have written less code - there are a lot of lines that repeat themeselves to accomplish the same task. When writing main.js I found my groove and IMO code is more readable than app.js when I first started.
+
+//I could have downloaded the Json fake data file and stored it locally in a folder. But that sounded like work.
+
+// main.js line 11 has "// return 'https://thispersondoesnotexist.com/image'". If I try to use it I get the same image unless I refresh the page. Shame. I decided to leave it in in case I might want to try and solve this issue in the futute. Luckily lorem picsum has a 'random' function. 
+
+//the numbers in the list view in main do not change when I delete an item, they rearrange themselves in order on pagereload. I decided to leave it as is.
+
+//its probably not a good idea to leave so many comments in a js file like this. Especially not in production mode.

@@ -49,7 +49,7 @@ $(window).on("load", function () {
     });
     $('#aboutBtn').click(e => {
         e.preventDefault();
-        alert('yes, this is just a simple alert button describing this page...');
+        alert('yes, this is just a simple alert button... For more comments, go to app.js comment section');
     });
     $('#logoutBtn').click(e => {
         //check if we clicked the clear LS button. If we havent, then the LS wont be empty, which means we should add back in thisUser to the array
@@ -170,5 +170,3 @@ $(window).on("load", function () {
     }
     //end of big render func---------------------------------
 });
-
-//animation?
