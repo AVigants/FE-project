@@ -30,10 +30,10 @@ $(function () {
         pass: '',
         cpass: ''
     }
+
     //---------------------------check local storage for existing data--------------------------------
     if (localStorage.getItem('userArr')) {
         userArr = JSON.parse(localStorage.getItem('userArr'));
-        console.log('list of my created users:', userArr);
         userArr.forEach(el => {
             userEmails.push(el.email);
         });
@@ -76,6 +76,19 @@ $(function () {
 
     });
     //--------------------------login form submit event-------------------------------------------------
+    //---------------function: get fake data if needed
+    const getFakeData = async () => {
+        let fakeData = [];
+        for (let i = 0; i < 3; i++) {
+            const response = await fetch('https://jsonplaceholder.typicode.com/users');
+            const data = await response.json();
+            data.forEach(el => {
+                fakeData.push({ fname: el.name, email: el.email });
+            });
+        }
+        return fakeData;
+    }
+    //login submit event-------------
     $('#loginForm').submit(e => {
         e.preventDefault();
         let emailFind = user.checkIfEmailAlreadyExists(loginEmail.value);
@@ -91,117 +104,129 @@ $(function () {
                 localStorage.removeItem('rememberMe');
                 console.log('rememberMe removed from local storage');
             }
-            console.log('successful login!');
-            //setting this user in local storage to be used in main js and main html later
-            emailFind = JSON.stringify(emailFind);
-            localStorage.setItem('emailFind', emailFind);
-            window.location.href = 'main.html'
-        } else {
+            if (userArr.length < 16) {
+                console.log('userArr.length < 16 so fetching fakeData');
+                getFakeData()
+                    .then(fakeData => {
+                        fakeData.forEach(el => {
+                            userArr.push(el)
+                        });
+                        //storing all this data is LS
+                        localStorage.setItem('userArr', JSON.stringify(userArr));
+                        localStorage.setItem('thisUser', JSON.stringify(emailFind));
+                        window.location.href = 'main.html';
+                    });
+            }   else{
+                localStorage.setItem('thisUser', JSON.stringify(emailFind));
+                window.location.href = 'main.html';
+            }
+        }   else {
             document.querySelector('#loginForm > div:nth-child(4) > input').classList.add('invalid');
         }
+        //setting this user in local storage to be used in main js and main html later
+        
     });
-    //---------------------------------forgot pass form slide toggle--------------------------------------------
-    forgotPass.click(e => {
-        $('#passResetForm').slideToggle();
-    })
-    //-------------------------------reset password submit event-------------------------------------
-    $('#passResetForm').submit(e => {
-        let emailFind = user.checkIfEmailAlreadyExists(passResetEmailField.value);
-        if (emailFind && emailFind.email === passResetEmailField.value) {
-            passResetEmailField.classList.remove('invalid');
-            $('#passResetEmailLabel').html(`<h5>We've sent you a link to your inbox (not really)</h5>`).css({ 'color': 'green' });
-            $('#passResetBtn').hide();
-            setTimeout(() => {
-                $('#passResetForm').fadeOut();
-            }, 2500);
-        } else {
-            passResetEmailField.classList.add('invalid');
-        }
+//---------------------------------forgot pass form slide toggle--------------------------------------------
+forgotPass.click(e => {
+    $('#passResetForm').slideToggle();
+})
+//-------------------------------reset password submit event-------------------------------------
+$('#passResetForm').submit(e => {
+    let emailFind = user.checkIfEmailAlreadyExists(passResetEmailField.value);
+    if (emailFind && emailFind.email === passResetEmailField.value) {
+        passResetEmailField.classList.remove('invalid');
+        $('#passResetEmailLabel').html(`<h5>We've sent you a link to your inbox (not really)</h5>`).css({ 'color': 'green' });
+        $('#passResetBtn').hide();
+        setTimeout(() => {
+            $('#passResetForm').fadeOut();
+        }, 2500);
+    } else {
+        passResetEmailField.classList.add('invalid');
+    }
 
-    });
-    //---------------------------------remember me checkbox----------------------------------
-    $('#rememberMe').click(e => {
-        rememberMe.isRememberMeChecked = !rememberMe.isRememberMeChecked;
-    });
-    //------------------------------------User class--------------------------------------------
-    class User {
-        constructor(fname, lname, email, pass, cpass) {
-            this.fname = fname,
-                this.lname = lname,
-                this.email = email,
-                this.pass = pass,
-                this.cpass = cpass
-        }
-        validateOnKeyup(dataValue, field) {
-            if (patterns[field.name].test(dataValue)) {
-                field.classList.add('valid')
-                field.classList.remove('invalid');
-                userObj[field.name] = dataValue;
-                //email check
-                if (field.name === 'email' && user.checkIfEmailAlreadyExists(dataValue)) {
-                    console.log('email already exists');
-                    field.classList.add('invalid');
-                    field.classList.remove('valid');
-                    userObj[field.name] = '';
-                }
-                if (field.name === 'cpass' && $("[name='pass']").val() !== $("[name = 'cpass']").val()) {
-                    field.classList.add('invalid');
-                    field.classList.remove('valid');
-                    userObj[field.name] = '';
-                    console.log('passwords do not match');
-                }
-
-            } else {
+});
+//---------------------------------remember me checkbox----------------------------------
+$('#rememberMe').click(e => {
+    rememberMe.isRememberMeChecked = !rememberMe.isRememberMeChecked;
+});
+//------------------------------------User class--------------------------------------------
+class User {
+    constructor(fname, lname, email, pass, cpass) {
+        this.fname = fname,
+            this.lname = lname,
+            this.email = email,
+            this.pass = pass,
+            this.cpass = cpass
+    }
+    validateOnKeyup(dataValue, field) {
+        if (patterns[field.name].test(dataValue)) {
+            field.classList.add('valid')
+            field.classList.remove('invalid');
+            userObj[field.name] = dataValue;
+            //email check
+            if (field.name === 'email' && user.checkIfEmailAlreadyExists(dataValue)) {
+                console.log('email already exists');
                 field.classList.add('invalid');
                 field.classList.remove('valid');
                 userObj[field.name] = '';
             }
-        }
-        registerUser(userObj) {
-            userArr.push(userObj);
-            userEmails.push(userObj.email);
-            userArr = JSON.stringify(userArr);
-            localStorage.setItem('userArr', userArr);
-            userArr = JSON.parse(userArr);
-            $('#innerDiv span').text(userObj.fname)
-            user.renderThankYou(userObj);
-        }
-        checkIfEmailAlreadyExists(data) {
-            let emailMatch = userArr.find(el => el.email === data);
-            return emailMatch;
-        }
-        renderThankYou(userObj) {
-            $('#outerDiv').fadeIn();
-            $(document).keyup(function(e) {
-                if (e.key === "Escape") {
-                    $('#outerDiv').fadeOut(100);
-               }
-           });
-           
-            $('#close').click(e => {
-                $('#outerDiv').fadeOut(100);
-            });
-            //rainbow colored text
-            $('innerDiv span').text(userObj.fname);
-            for (let i = 0; i < 360; i++) {
-                setTimeout(() => {
-                    registeredUserSpan.style.color = `hsl(${i}, 100%, 50%)`;
-                }, i * 10);
-            };
-            setTimeout(() => {
-                $('#outerDiv').fadeOut(100);
-            }, 3600);
-            //go back to login form
-            $('#registerFormWrapper').fadeOut(200);
-            setTimeout(() => {
-                $('#loginFormWrapper').fadeIn(200);
-            }, 200);
-        }
+            if (field.name === 'cpass' && $("[name='pass']").val() !== $("[name = 'cpass']").val()) {
+                field.classList.add('invalid');
+                field.classList.remove('valid');
+                userObj[field.name] = '';
+                console.log('passwords do not match');
+            }
 
+        } else {
+            field.classList.add('invalid');
+            field.classList.remove('valid');
+            userObj[field.name] = '';
+        }
     }
-    let user = new User('firstName', 'lastName', 'email@email.com', 'password', 'password');
-    //---------------------------------laundry list-------------------------------------------------
-    //make an admin class that can delete users
-    //comments:
-    //Im sure I dont have to use true/else for checkboxes since I can probably check for their state when loggin in. For some reason I couldnt do it with jquery but ironically I can set the default value to checked if there exists a value in local storage already...
+    registerUser(userObj) {
+        userArr.push(userObj);
+        userEmails.push(userObj.email);
+        userArr = JSON.stringify(userArr);
+        localStorage.setItem('userArr', userArr);
+        userArr = JSON.parse(userArr);
+        $('#innerDiv span').text(userObj.fname)
+        user.renderThankYou(userObj);
+    }
+    checkIfEmailAlreadyExists(data) {
+        let emailMatch = userArr.find(el => el.email === data);
+        return emailMatch;
+    }
+    renderThankYou(userObj) {
+        $('#outerDiv').fadeIn();
+        $(document).keyup(function (e) {
+            if (e.key === "Escape") {
+                $('#outerDiv').fadeOut(100);
+            }
+        });
+
+        $('#close').click(e => {
+            $('#outerDiv').fadeOut(100);
+        });
+        //rainbow colored text
+        $('innerDiv span').text(userObj.fname);
+        for (let i = 0; i < 360; i++) {
+            setTimeout(() => {
+                registeredUserSpan.style.color = `hsl(${i}, 100%, 50%)`;
+            }, i * 10);
+        };
+        setTimeout(() => {
+            $('#outerDiv').fadeOut(100);
+        }, 3600);
+        //go back to login form
+        $('#registerFormWrapper').fadeOut(200);
+        setTimeout(() => {
+            $('#loginFormWrapper').fadeIn(200);
+        }, 200);
+    }
+
+}
+let user = new User('firstName', 'lastName', 'email@email.com', 'password', 'password');
 });
+
+
+//remove rememberMe when it is ticked off, not when logging in
